@@ -6,12 +6,7 @@ package ru.oop;
  * @author vpyzhyanov
  * @since 21.10.2020
  */
-public interface Person {
-
-    /**
-     * Текущее местоположение
-     */
-    Position getPosition();
+public interface Person extends Positioned {
 
     /**
      * Пройти до указанного места из текущего местоположения
@@ -19,4 +14,6 @@ public interface Person {
      * @param destination место назначения
      */
     void walk(Position destination);
+
+    Transport chooseTransport();
 }
