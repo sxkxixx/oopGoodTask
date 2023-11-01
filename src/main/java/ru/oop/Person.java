@@ -12,6 +12,7 @@ public interface Person {
      * Текущее местоположение
      */
     Position getPosition();
+    void setPosition(Position position);
 
     /**
      * Пройти до указанного места из текущего местоположения
