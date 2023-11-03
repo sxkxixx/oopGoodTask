@@ -39,8 +39,7 @@ public class Main {
      * Добраться человеку до заданного места.<br>
      * <strong>Задача 2</strong>
      */
-    public static void moveToTask2(Person person, Position destination){
-        Transport transport = new Bus("10", person);
+    public static void moveToTask2(Person person, Position destination, Transport transport){
         person.walk(transport.getPosition());
         transport.deliver(destination, person);
         person.walk(destination);
