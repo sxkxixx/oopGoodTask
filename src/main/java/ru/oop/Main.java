@@ -40,11 +40,11 @@ public class Main {
      * <strong>Задача 2</strong>
      */
     public static void moveToTask2(Person person, Position destination){
-        Transport transport = person.chooseTransport();
+        Transport transport = new Bus("10", person);
         person.walk(transport.getPosition());
         transport.deliver(destination, person);
-        if (person.getPosition() != destination)
-            person.walk(destination);
+        person.walk(destination);
+        assert person.getPosition() == destination;
     }
 
     /**
@@ -61,5 +61,6 @@ public class Main {
             transport.deliver(destination, person);
         }
         person.walk(destination);
+        assert person.getPosition() == destination;
     }
 }
