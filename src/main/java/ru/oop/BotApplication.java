@@ -1,9 +1,13 @@
 package ru.oop;
 
+import net.dv8tion.jda.api.JDA;
+import net.dv8tion.jda.api.JDABuilder;
+import ru.oop.bots.Bot;
 import ru.oop.bots.DiscordBot;
 import ru.oop.bots.TelegramBot;
+import ru.oop.config.Config;
+import ru.oop.handlers.BotHandler;
 import ru.oop.handlers.Handler;
-import ru.oop.handlers.ReplyHandler;
 
 /**
  * Построить базовую архитектуру бота,
@@ -17,8 +21,21 @@ import ru.oop.handlers.ReplyHandler;
  */
 public class BotApplication {
     public static void main(String[] args){
-        Handler handler = new ReplyHandler();
-        new TelegramBot(handler).run();
-        new DiscordBot(handler).run();
+        // Инициализация обработчика
+        Handler handler = new BotHandler();
+
+        // Настройки для телеграм бота
+        Config telegramConfig = new Config("BOT_NAME", "BOT_TOKEN");
+        // Телеграм бот
+        Bot telegramBot = new TelegramBot(telegramConfig, handler);
+
+        // Настройки дискорд бота
+        Config discordConfig = new Config(null, "BOT_TOKEN");
+        // Дискорд бот
+        Bot discordBot = new DiscordBot(discordConfig, handler);
+
+        // Java Discord API
+        JDA api = JDABuilder.createDefault(discordBot.getBotToken()).build();
+        api.addEventListener(discordBot);
     }
 }

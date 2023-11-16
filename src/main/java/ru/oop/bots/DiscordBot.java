@@ -1,48 +1,62 @@
 package ru.oop.bots;
 
+import net.dv8tion.jda.api.entities.Message;
+import net.dv8tion.jda.api.entities.channel.middleman.MessageChannel;
+import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
+import net.dv8tion.jda.api.hooks.ListenerAdapter;
+import ru.oop.config.Config;
 import ru.oop.handlers.Handler;
+import ru.oop.message.ContentMessage;
 
 /**
  * Класс для реализации Discord бота
  */
-public class DiscordBot implements Bot{
+public class DiscordBot extends ListenerAdapter implements Bot {
     /**
-     * Оработчик сообщений
+     * Настройки бота
      */
-    private Handler handler;
+    private final Config config;
+    /**
+     * Обработчик сообщений
+     */
+    private final Handler handler;
 
     /**
-     * @param handler обработчик сообщений
+     * @param config Настройки бота
+     * @param handler Обработчик сообщений
      */
-    public DiscordBot(Handler handler) {
+    public DiscordBot(Config config, Handler handler) {
+        this.config = config;
         this.handler = handler;
     }
 
     /**
-     * Метод для отправки сообщения в чат
-     * @param chatId ID чата
-     * @param message Сообщение для отправки
+     * Метод, который получает сообщения от пользователя
+     * @param event Событие
      */
     @Override
-    public void sendMessage(Long chatId, String message) {
+    public void onMessageReceived(MessageReceivedEvent event) {
+        Message message = event.getMessage();
+        String content = message.getContentRaw();
+        ContentMessage contentMessage = this.handler.getHandledMessage(content);
+        sendMessage(event.getChannel(), contentMessage.getMessageContent());
     }
 
     /**
-     * Принимает и обрабатывает полученное сообщение
-     * @param chatId ID чата
-     * @param message Полученное сообщение
+     * Метод для отправки сообщения
+     * @param messageChannel
+     * @param answer
      */
-    @Override
-    public void onUpdateReceived(Long chatId, String message) {
-        String handledReply = this.handler.getHandledMessage(message);
-        sendMessage(chatId, message);
+    public void sendMessage(MessageChannel messageChannel, String answer) {
+        messageChannel.sendMessage(answer).queue();
     }
 
     /**
-     * Запускает бота
+     * Возвращает токен бота
+     * @return Токен бота
      */
     @Override
-    public void run() {
-
+    public String getBotToken() {
+        return this.config.getToken();
     }
 }
